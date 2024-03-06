@@ -5,9 +5,9 @@ var values_obj = {
 	email: "craig@corporate.com",
 	phone: "4206666969",
 	address: "420 Corporate Ave, NY, 69420",
-	linkedin: "",
-	github: "",
-	website: ""
+	linkedin: "https://www.linkedin.com/in/corporatecraig/",
+	github: "https://www.linkedin.com/in/corporatecraig/",
+	website: "https://www.linkedin.com/in/corporatecraig/"
 };
 
 browser.runtime.onMessage.addListener((request) => {
@@ -42,15 +42,18 @@ browser.runtime.onMessage.addListener((request) => {
 // This function checks all of the attributes of an element. We want to find the correct label for this element. We need to determine what to do if we find an attribute.
 // We shoudl return the value from our dict if we find a dict witha mathcing key. 
 function check_attrs(el) {
+	//return "jimmy";
 	var attributes = el.attributes;
 	//var attr_vals = [];
 	//var pattern = /.*first[-_]?name.*/i;
 	// Loop through our keys:
 	//for (let key in values_obj) {
 	//for (var i = 0; i<values_obj.length; i++) {
-	Object.entries(values_obj).forEach(([key, value]) => {
+	//Object.entries(values_obj).forEach(([key, value]) => {
+	var foundLabel;
+	Object.entries(values_obj).some(([key, value]) => {
 		//console.log(`${key}: ${value}`);
-		//console.log(key, value);
+		console.log(key, value);
 		//const pattern = /.*first[-_]?name.*/i;
 		// Have to make pattern from key somehow
 		const pattern = "/.*" + key + ".*/i";
@@ -61,12 +64,15 @@ function check_attrs(el) {
 			//attr_vals.push(attributes[i].value);
 			if (pattern.match(attributes[i].value)){
 				//console.log(attributes[i].value, value);
-				console.log(value);
-				return value;
+				foundLabel = value;
+				return true;
+				//console.log(value);
+				//return value;
 			}
 		}
 	//}
 	});
+	return foundLabel;
 	//console.log(key);
 }
 
