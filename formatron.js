@@ -1,7 +1,13 @@
 var values_obj = {
 	name: "Corporate Craig",
-	firstName: "Corporate ",
-	lastName: "Craig"
+	first_name: "Corporate ",
+	last_name: "Craig",
+	email: "craig@corporate.com",
+	phone: "4206666969",
+	address: "420 Corporate Ave, NY, 69420",
+	linkedin: "",
+	github: "",
+	website: ""
 };
 
 browser.runtime.onMessage.addListener((request) => {
@@ -16,8 +22,10 @@ browser.runtime.onMessage.addListener((request) => {
 	//console.log(inputs.length);
 	// Loop through the NodeList and add text to each input
 	for (var i=0, n=inputs.length; i < n; ++i ) {
-		var label = get_label(inputs[i]);
-
+		//var label = get_label(inputs[i]);
+		var label = check_attrs(inputs[i]);
+		console.log(label);
+		inputs[i].value = label;
 	}
 	//inputs.forEach(function(input) {
 	//	var label = get_label(input);
@@ -31,25 +39,35 @@ browser.runtime.onMessage.addListener((request) => {
 
 });
 
+// This function checks all of the attributes of an element. We want to find the correct label for this element. We need to determine what to do if we find an attribute.
+// We shoudl return the value from our dict if we find a dict witha mathcing key. 
 function check_attrs(el) {
 	var attributes = el.attributes;
-	var attr_vals = [];
-	var pattern = /.*first[-_]?name.*/i;
-	for (var i = 0; i < attributes.length; i++) {
-		//attr_vals.push(attributes[i].value);
-		if (pattern.test(attributes[i].value)){
-			console.log(attributes[i].value);
+	//var attr_vals = [];
+	//var pattern = /.*first[-_]?name.*/i;
+	// Loop through our keys:
+	//for (let key in values_obj) {
+	//for (var i = 0; i<values_obj.length; i++) {
+	Object.entries(values_obj).forEach(([key, value]) => {
+		//console.log(`${key}: ${value}`);
+		//console.log(key, value);
+		//const pattern = /.*first[-_]?name.*/i;
+		// Have to make pattern from key somehow
+		const pattern = "/.*" + key + ".*/i";
+		//var attr_vals = [];
+		//console.log(pattern);
+		//console.log(values_obj[i]);
+		for (var i = 0; i < attributes.length; i++) {
+			//attr_vals.push(attributes[i].value);
+			if (pattern.match(attributes[i].value)){
+				//console.log(attributes[i].value, value);
+				console.log(value);
+				return value;
+			}
 		}
-	}
-	//console.log(attr_vals);
-    	//for( var key in values_obj ){
-	//	var pattern = /.*first[-_]?name.*/i;
-	//	//console.log(key)
-	//	if(attr_vals.some(str => pattern.test(str))){
-	//		console.log(values[key]);
-	//		return values[key];
-	//	}
 	//}
+	});
+	//console.log(key);
 }
 
 function get_label(el) {
